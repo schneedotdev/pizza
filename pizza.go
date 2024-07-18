@@ -12,3 +12,9 @@ func (s *Slice[T]) Pop() (*T, error) {
 	}
 	return nil, ErrEmptySlice
 }
+
+// Push appends an element to the slice and returns the updated slice.
+func (s *Slice[T]) Push(value T) *Slice[T] {
+	*s = append(*s, value)
+	return s
+}
