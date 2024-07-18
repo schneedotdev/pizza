@@ -1,9 +1,6 @@
 package pizza
 
-import (
-	"reflect"
-	"testing"
-)
+import "testing"
 
 type TestCase[T any] struct {
 	name           string
@@ -55,7 +52,7 @@ func TestPop(t *testing.T) {
 
 			// Check postValues
 			pre, post := tc.preValues, tc.postValues
-			if !reflect.DeepEqual(pre, post) {
+			if !pre.Equals(post) {
 				t.Errorf("Test case '%s': Post and pre values mismatch. Expected %v, got %v", tc.name, post, pre)
 			}
 
