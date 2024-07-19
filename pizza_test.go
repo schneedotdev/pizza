@@ -67,3 +67,54 @@ func TestPop(t *testing.T) {
 		})
 	}
 }
+
+type ForEachTestCase[T any] struct {
+	name     string
+	input    Slice[T]
+	expected []T
+	indices  []T
+}
+
+func TestForEach(t *testing.T) {
+	testCases := []ForEachTestCase[int]{
+		{
+			name:     "ForEach over a non-empty slice",
+			input:    Slice[int]{1, 2, 3, 4, 5},
+			expected: []int{1, 2, 3, 4, 5},
+			indices:  []int{0, 1, 2, 3, 4},
+		},
+		{
+			name:     "ForEach over an empty slice",
+			input:    Slice[int]{},
+			expected: []int{},
+			indices:  []int{},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			var values []int
+			var indices []int
+			tc.input.ForEach(func(e int, i int) {
+				values = append(values, e)
+				indices = append(indices, i)
+			})
+
+			if len(values) != len(tc.expected) {
+				t.Fatalf("Test case '%s': Expected %d number of values, got %d", tc.name, len(tc.expected), len(values))
+			}
+
+			for i := range values {
+				if values[i] != tc.expected[i] {
+					t.Errorf("Test case '%s': Expected value %d at index %d, got %d", tc.name, tc.expected[i], i, values[i])
+				}
+			}
+
+			for i := range indices {
+				if indices[i] != tc.indices[i] {
+					t.Errorf("Test case '%s': Expected index %d, got %d", tc.name, tc.indices[i], indices[i])
+				}
+			}
+		})
+	}
+}
