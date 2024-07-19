@@ -109,3 +109,56 @@ func TestForEach(t *testing.T) {
 		})
 	}
 }
+
+type SomeTestCase[T any] struct {
+	name        string
+	input       Slice[T]
+	predicate   func(e T, i int) bool
+	expected    bool
+	expectedIndex int
+}
+
+func TestSome(t *testing.T) {
+	testCases := []SomeTestCase[int]{
+		{
+			name:  "Check for even integers",
+			input: []int{1, 2, 3},
+			predicate: func(e int, i int) bool {
+				return e%2 == 0
+			},
+			expected:    true,
+			expectedIndex: 1,
+		},
+		{
+			name:  "Check for odd integers",
+			input: []int{2, 2, 2},
+			predicate: func(e int, i int) bool {
+				return e%2 != 0
+			},
+			expected:    false,
+			expectedIndex: -1,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			meetsPredicate := tc.input.Some(tc.predicate)
+
+			if meetsPredicate != tc.expected {
+				t.Errorf("Test case '%s': Expected result to equal %t, got %t", tc.name, tc.expected, meetsPredicate)
+			}
+
+			truthyIndex := -1
+			for i, e := range tc.input {
+				if tc.predicate(e, i) {
+					truthyIndex = i
+					break
+				}
+			}
+
+			if truthyIndex != tc.expectedIndex {
+				t.Errorf("Test case '%s': Expected truthy at index %d, got %d", tc.name, tc.expectedIndex, truthyIndex)
+			}
+		})
+	}
+}

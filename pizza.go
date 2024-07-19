@@ -32,3 +32,13 @@ func (s Slice[T]) ForEach(callback func(element T, index int)) {
 		callback(v, i)
 	}
 }
+
+// Some loops through a Slice and returns a boolean based on whether a predicate is met.
+func (s Slice[T]) Some(callback func(element T, index int) bool) bool {
+	for i, v := range s {
+		if callback(v, i) {
+			return true
+		}
+	}
+	return false
+}
