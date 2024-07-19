@@ -2,7 +2,7 @@ package pizza
 
 import "testing"
 
-type TestCase[T any] struct {
+type PopTestCase[T any] struct {
 	name           string
 	preValues      Slice[T]
 	postValues     Slice[T]
@@ -15,7 +15,7 @@ func toPtr[T any](v T) *T {
 }
 
 func TestPop(t *testing.T) {
-	testCases := []TestCase[int]{
+	testCases := []PopTestCase[int]{
 		{
 			name:           "Pop from non-empty slice",
 			preValues:      Slice[int]{1, 2, 3},
