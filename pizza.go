@@ -26,7 +26,7 @@ func (s *Slice[T]) Push(v T) *Slice[T] {
 	return s
 }
 
-// ForEach loops through a Slice and calls it's callback func during each iteration
+// ForEach loops through a Slice and calls it's callback func during each iteration.
 func (s Slice[T]) ForEach(callback func(element T, index int)) {
 	for i, v := range s {
 		callback(v, i)
