@@ -4,8 +4,8 @@ import "testing"
 
 type PopTestCase[T any] struct {
 	name           string
-	preValues      Slice[T]
-	postValues     Slice[T]
+	valuesBefore   Slice[T]
+	valuesAfter    Slice[T]
 	expectedPopped *T
 	expectedError  error
 }
@@ -18,22 +18,22 @@ func TestPop(t *testing.T) {
 	testCases := []PopTestCase[int]{
 		{
 			name:           "Pop from non-empty slice",
-			preValues:      Slice[int]{1, 2, 3},
-			postValues:     Slice[int]{1, 2},
+			valuesBefore:   Slice[int]{1, 2, 3},
+			valuesAfter:    Slice[int]{1, 2},
 			expectedPopped: toPtr(3),
 			expectedError:  nil,
 		},
 		{
 			name:           "Pop from one-element slice",
-			preValues:      Slice[int]{42},
-			postValues:     Slice[int]{},
+			valuesBefore:   Slice[int]{42},
+			valuesAfter:    Slice[int]{},
 			expectedPopped: toPtr(42),
 			expectedError:  nil,
 		},
 		{
 			name:           "Pop from empty slice",
-			preValues:      Slice[int]{},
-			postValues:     Slice[int]{},
+			valuesBefore:   Slice[int]{},
+			valuesAfter:    Slice[int]{},
 			expectedPopped: nil,
 			expectedError:  ErrEmptySlice,
 		},
@@ -41,7 +41,7 @@ func TestPop(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			popped, err := tc.preValues.Pop()
+			popped, err := tc.valuesBefore.Pop()
 
 			// Check popped
 			if popped != nil && (tc.expectedPopped == nil || *popped != *tc.expectedPopped) {
@@ -50,10 +50,10 @@ func TestPop(t *testing.T) {
 				t.Errorf("Test case '%s': Expected popped value %v, got nil", tc.name, tc.expectedPopped)
 			}
 
-			// Check postValues
-			pre, post := tc.preValues, tc.postValues
-			if !pre.Equals(post) {
-				t.Errorf("Test case '%s': Post and pre values mismatch. Expected %v, got %v", tc.name, post, pre)
+			// Check valuesAfter
+			before, after := tc.valuesBefore, tc.valuesAfter
+			if !before.Equals(after) {
+				t.Errorf("Test case '%s': Before and after values mismatch. Expected %v, got %v", tc.name, after, before)
 			}
 
 			// Check error
