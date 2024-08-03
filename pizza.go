@@ -4,6 +4,16 @@ import "reflect"
 
 type Slice[T any] []T
 
+// Length returns the length of the slice
+func (s Slice[T]) Length() int {
+	return len(s)
+}
+
+// Capacity returns the length of the slice
+func (s Slice[T]) Capacity() int {
+	return cap(s)
+}
+
 // Equals checks whether two Slices are deeply equal or not.
 func (a Slice[T]) Equals(b Slice[T]) bool {
 	return reflect.DeepEqual(a, b)
